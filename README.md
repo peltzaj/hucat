@@ -47,6 +47,5 @@ And multiple json POST commands (below), and received json responses that told m
 3. Optimize for remote deployments - 
      - Modification to the NAT (local deployer style for the VM)
      - Have the daemon NOT run as 'root'
-     - Get rid of 'sudo' in ansible playbook
      - Configure code to use a centralized mongodb, instead of local instance
 
