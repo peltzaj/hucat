@@ -4,11 +4,10 @@ yum install epel-release -y
 yum install ansible python-flask python-jinja2 mongodb mongodb-server pymongo git -y
 chkconfig mongod on
 service mongod start
-mkdir /var/flask
-chmod -R 755 /var/flask
 git clone https://github.com/peltzaj/hucat.git hucat
-chown -r vagrant.vagrant hucat
-ansible all -i "localhost," -c local /home/vagrant/flaskapp.yaml
+chown -R vagrant.vagrant /home/vagrant/hucat
+echo "localhost ansible_connection=local" >> /etc/ansible/hosts
+ansible-playbook /home/vagrant/hucat/flaskapp.yml
 SCRIPT
 
 Vagrant.configure("2") do |config|
