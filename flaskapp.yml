@@ -27,7 +27,7 @@
       register: hucatdir_stat
 
     - name: stop service
-      service: name={{flaskapp}} state=stopped
+      service: name=flaskapp state=stopped
       when: flaskinit_stat.stat.exists
       register: flask_stopped
 
