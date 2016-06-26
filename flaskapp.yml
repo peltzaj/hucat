@@ -4,7 +4,7 @@
     - name: clone new git
       command: "{{ item }} chdir=/home/vagrant"
       with_items:
-      - rm -rf /home/vagrant/hucat
+      - sudo rm -rf /home/vagrant/hucat
       - git clone https://github.com/peltzaj/hucat.git hucat
 
     - name: flask directory 
@@ -36,17 +36,17 @@
       when: mongocollection_stat.stat.exists == false
 
     - name: Overwrite flaskapp.py 
-      command: \cp  /home/vagrant/hucat/flaskapp.py /var/flask/flaskapp.py
+      command: sudo \cp  /home/vagrant/hucat/flaskapp.py /var/flask/flaskapp.py
       when: flaskapp_stat.stat.exists and ( flask_stopped or flaskinit_stat.stat.exists == false )
       register: flaskapp_overwritten
 
     - name: Overwrite flask_init.d
       command: "{{ item }} chdir=/home/vagrant"
       with_items:
-      - \cp  /home/vagrant/hucat/flask.init_d /etc/init.d/flaskapp
-      - chmod a+x /etc/init.d/flaskapp
-      - chkconfig --add flaskapp
-      - chkconfig flaskapp on
+      - sudo \cp  /home/vagrant/hucat/flask.init_d /etc/init.d/flaskapp
+      - sudo chmod a+x /etc/init.d/flaskapp
+      - sudo chkconfig --add flaskapp
+      - sudo chkconfig flaskapp on
       when: flaskinit_stat.stat.exists == false
       
     - name: start service
