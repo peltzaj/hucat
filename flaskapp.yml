@@ -2,7 +2,7 @@
 - hosts: all
   tasks:
     - name: clone new git
-      command: "{{ items }} chdir=/home/vagrant"
+      command: "{{ item }} chdir=/home/vagrant"
       with_items:
       - rm -rf /home/vagrant/hucat
       - git clone https://github.com/peltzaj/hucat.git hucat
@@ -41,7 +41,7 @@
       register: flaskapp_overwritten
 
     - name: Overwrite flask_init.d
-      command: "{{ item }} "
+      command: "{{ item }} chdir=/home/vagrant"
       with_items:
       - \cp  /home/vagrant/hucat/flask.init_d /etc/init.d/flaskapp
       - chmod a+x /etc/init.d/flaskapp
