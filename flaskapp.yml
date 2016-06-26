@@ -1,0 +1,65 @@
+---
+- hosts: all
+  tasks:
+    - name: see git clone exists
+      stat: path=/home/vagrant/hucat
+      register: hucatdir_stat
+
+    - name: clone new git
+      command: "{{ items }} "
+      with_items:
+      - cd /home/vagrant
+      - rm -rf /home/vagrant/hucat
+      - git clone https://github.com/peltzaj/hucat.git hucat
+      when: hucatdir_stat.stat.exists == false
+
+    - name: see flask directory exists
+      stat: path=/var/flask
+      register: flaskdir_stat
+
+    - name: create flask directory 
+      command: mkdir /var/flask
+      when: flaskdir_stat.stat.exists == false
+
+    - name: see mongo collection exists
+      stat: path=/var/lib/mongodb/project.0
+      register: mongocollection_stat
+
+    - name: see flaskapp_init.d exists
+      stat: path=/etc/init.d/flaskapp
+      register: flaskinit_stat
+
+    - name: see replacement flaskapp.py exists
+      stat: path=/home/vagrant/hucat/flaskapp.py
+      register: flaskapp_stat
+
+    - name: see replacement flaskapp.init_d exists
+      stat: path=/home/vagrant/hucat/
+      register: hucatdir_stat
+
+    - name: stop service
+      service: name={{flaskapp}} state=stopped
+      when: flaskinit_stat.stat.exists
+      register: flask_stopped
+
+    - name: seed mongo
+      command: mongoimport --db project --collection users --drop --file /home/vagrant/hucat/dataset.json
+      when: mongocollection_stat.stat.exists == false
+
+    - name: Overwrite flaskapp.py 
+      command: \cp  /home/vagrant/hucat/flaskapp.py /var/flask/flaskapp.py
+      when: flaskapp_stat.stat.exists and ( flask_stopped or flaskinit_stat.stat.exists == false )
+      register: flaskapp_overwritten
+
+    - name: Overwrite flask_init.d
+      command: "{{ items }} "
+      with_items:
+      - \cp  /home/vagrant/hucat/flask.init_d /etc/init.d/flaskapp
+      - chmod a+x /etc/init.d/flaskapp
+      - chkconfig --add flaskapp
+      - chkconfig flaskapp on
+      when: flaskinit_stat.stat.exists == false
+      
+    - name: start service
+      service: name={{flaskapp}} state=started
+      when: flaskapp_overwritten
