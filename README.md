@@ -19,19 +19,22 @@ will seed the mongodb database, if it is empty. Finally, ansible will start the 
 #
 # Repeated usage
 #
-Since this is a one-off with not a large deployment, the ansible hosts file was configured only for localhost. Just run the playbook
-and perform a git pull, stop the service, update the flaskapp, reseed the mongodb if the collection is gone, and start the service.
+Since this is a one-off with not a large deployment, the ansible hosts file was configured only 
+for localhost. Just run the playbook. The playbook will  perform a git pull, stop the service, 
+update the flaskapp, reseed the mongodb if the collection is gone, and start the service.
 
   $ ansible-playbook /home/vagrant/hucat/flaskapp.yml
 
 #
 # Testing
 #
-In testing the application, I tested multiple GET strings generally of the form below, and received json responses with "count".
+In testing the application, I tested multiple GET strings generally of the form below, and received 
+json responses with "count".
 
   $ curl "http://localhost:8080/?uid=1&date=2015-06-25"
 
-And multiple json POST commands (below), and received json responses that told me if the data was successfully added or not.
+And multiple json POST commands (below), and received json responses that told me if the data was 
+successfully added or not.
 
   $ curl -H "Content-Type: application/json" -X POST -d '[{"uid": "1","name": "John Doe","date": "2015-05-12T14:36:00.451765","md5checksum": "f6903e9838720c98ed4098d842264d7c"}]' http://localhost:8080/
 
