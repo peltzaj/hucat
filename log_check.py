@@ -19,7 +19,8 @@ from optparse import OptionParser
 from datetime import datetime
 
 #  make sure we are running from the "system root" directory
-os.chdir("/")
+sysroot = os.path.abspath("/")
+os.chdir(sysroot)
 
 #  start
 def main():
@@ -28,33 +29,41 @@ def main():
   arguments = get_arguments()
 
   #  set variables
-  now = int(time.time())
-  tenminago = now - 600
-  loglines=[] 
-
+  foundstartpoint=0
+  now = time.time()
+  tenminago = int(time.time()) - 600
+  std10 = now.strftime("%b %e %H:%M")
+  epoch10 = str(tenminago)[:-2]
+  #print now
+  #print tenminago
+  print std10
+  print epoch10
+  
   #  open file / see if it exists
   try:
     with open(arguments.log, 'r') as f:
       for singleline in f:
-          
-
-
-
-      
-  except:
-    #  logfile is invalid
+        #if singleline.startswith( 'r' )
+        #  foundstartpoint = 1
+        #if singleline.startswith( 'b' )
+        #  foundstartpoint = 1
+        if foundstartpoint == 1 :
+        	if "Error" in singleline:
+        		print "2"
+        		sys.exit(0)
+        	elif "Warning" in singleline:
+        		print "1"
+        		sys.exit(0)
+        	else:
+        		continue
+  except:  
     print "2"
-
-
-
-
-
-
-
-
-
- 
-sys.exit(0)
+    sys.exit(0)
+  
+  # all is okay
+  print "0"
+  
+  sys.exit(0)
 
 #  argument parser and help response
 def get_arguments():

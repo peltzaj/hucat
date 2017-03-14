@@ -1,11 +1,11 @@
 ---
 - hosts: all
   tasks:
-    - name: clone new git
-      command: "{{ item }} chdir=/home/vagrant"
-      with_items:
-      - sudo rm -rf /home/vagrant/hucat
-      - git clone https://github.com/peltzaj/hucat.git hucat
+  #  - name: clone new git
+  #    command: "{{ item }} chdir=/home/vagrant"
+  #    with_items:
+  #    - sudo rm -rf /home/vagrant/hucat
+  #    - git clone https://github.com/peltzaj/hucat.git hucat
 
     - name: flask directory 
       file: path=/var/flask state=directory mode=0755
